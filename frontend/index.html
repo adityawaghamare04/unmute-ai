@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNMUTE.AI</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ── Header ───────────────────────── -->
+  <header class="header">
+    <div class="header__brand">
+      <div class="brand__icon">U</div>
+      <div>
+        <div class="brand__name">UNMUTE.AI</div>
+        <div class="brand__sub">Real-time Sign Language Translation</div>
+      </div>
+    </div>
+    <div id="statusPill" class="status-pill status-pill--connecting">
+      <span class="status-pill__dot"></span>
+      <span id="statusText">Connecting</span>
+    </div>
+  </header>
+
+  <!-- ── Main ─────────────────────────── -->
+  <main class="main">
+
+    <!-- Left — Video -->
+    <section class="video-section">
+      <div class="video-card">
+        <div class="video-card__header">
+          <span class="video-card__label">Camera Feed</span>
+          <div class="video-card__badges">
+            <span class="badge badge--fps">
+              <span class="badge__dot"></span>
+              LIVE
+            </span>
+            <span class="badge badge--neutral" id="fpsBadge">-- fps</span>
+          </div>
+        </div>
+        <div class="video-wrapper">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="canvas" style="display:none;"></canvas>
+          <!-- No hand overlay -->
+          <div id="noHandOverlay" class="no-hand-overlay">
+            <div class="no-hand-overlay__icon">✋</div>
+            <div class="no-hand-overlay__text">Show your hand</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gesture Card -->
+      <div class="gesture-card">
+        <div class="gesture-card__left">
+          <div class="gesture-card__label">Detected Gesture</div>
+          <div id="gestureDisplay" class="gesture-display">--</div>
+          <div id="gestureSub" class="gesture-sub">Waiting...</div>
+        </div>
+        <div class="gesture-card__right">
+          <!-- Hold progress ring -->
+          <div class="hold-ring-wrapper">
+            <svg class="hold-ring" viewBox="0 0 64 64">
+              <circle class="hold-ring__track" cx="32" cy="32" r="26"/>
+              <circle id="holdRingFill" class="hold-ring__fill" cx="32" cy="32" r="26"/>
+            </svg>
+            <div id="holdPercent" class="hold-ring__label">0%</div>
+          </div>
+          <div class="hold-ring-sub">Hold to add</div>
+        </div>
+      </div>
+
+      <!-- Confidence Bar -->
+      <div class="conf-card">
+        <div class="conf-card__header">
+          <span class="conf-card__label">Confidence</span>
+          <span id="confValue" class="conf-card__value">0%</span>
+        </div>
+        <div class="conf-track">
+          <div id="confFill" class="conf-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right — Word Builder + TTS -->
+    <aside class="panel">
+
+      <!-- Word Builder -->
+      <div class="panel__card">
+        <div class="panel__card-header">
+          <span class="panel__card-title">Word Builder</span>
+          <div class="panel__card-actions">
+            <button id="btnAutoBuild" class="action-btn action-btn--toggle-on" title="Toggle auto sentence building">
+            ⏺ Auto Build
+            </button>
+            <button id="btnSpeak" class="action-btn action-btn--primary" title="Speak sentence">
+              🔊 Speak
+            </button>
+            
+            <button id="btnSpace" class="action-btn" title="Add space">
+              ␣ Space
+            </button>
+            <button id="btnBackspace" class="action-btn" title="Delete last">
+              ⌫
+            </button>
+            <button id="btnClear" class="action-btn action-btn--danger" title="Clear all">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Sentence display -->
+        <div id="sentenceDisplay" class="sentence-display">
+          <span class="sentence-placeholder">Your sentence will appear here...</span>
+        </div>
+
+        <!-- Token chips -->
+        <div id="tokenTrack" class="token-track"></div>
+
+        <!-- Stats row -->
+        <div class="builder-stats">
+          <div class="builder-stat">
+            <div class="builder-stat__val" id="wordCount">0</div>
+            <div class="builder-stat__label">Tokens</div>
+          </div>
+          <div class="builder-stat">
+            <div class="builder-stat__val" id="charCount">0</div>
+            <div class="builder-stat__label">Chars</div>
+          </div>
+          <div class="builder-stat">
+            <div class="builder-stat__val" id="sessionGestures">0</div>
+            <div class="builder-stat__label">Gestures</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TTS Settings -->
+      <div class="panel__card">
+        <div class="panel__card-header">
+          <span class="panel__card-title">Voice Settings</span>
+          <label class="toggle">
+            <input type="checkbox" id="ttsToggle" checked/>
+            <span class="toggle__slider"></span>
+          </label>
+        </div>
+        <div class="tts-controls">
+          <div class="tts-control">
+            <label class="tts-label">Speed</label>
+            <input type="range" id="ttsRate" min="0.5" max="2" step="0.1" value="1" class="tts-range"/>
+            <span id="ttsRateVal" class="tts-range-val">1.0×</span>
+          </div>
+          <div class="tts-control">
+            <label class="tts-label">Pitch</label>
+            <input type="range" id="ttsPitch" min="0.5" max="2" step="0.1" value="1" class="tts-range"/>
+            <span id="ttsPitchVal" class="tts-range-val">1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supported Gestures -->
+      <div class="panel__card">
+        <div class="panel__card-header">
+          <span class="panel__card-title">Supported Gestures</span>
+        </div>
+       <div class="gesture-grid">
+  <!-- Letters A–Z -->
+  <div class="gesture-chip">A</div>
+  <div class="gesture-chip">B</div>
+  <div class="gesture-chip">C</div>
+  <div class="gesture-chip">D</div>
+  <div class="gesture-chip">E</div>
+  <div class="gesture-chip">F</div>
+  <div class="gesture-chip">G</div>
+  <div class="gesture-chip">H</div>
+  <div class="gesture-chip">I</div>
+  <div class="gesture-chip">J</div>
+  <div class="gesture-chip">K</div>
+  <div class="gesture-chip">L</div>
+  <div class="gesture-chip">M</div>
+  <div class="gesture-chip">N</div>
+  <div class="gesture-chip">O</div>
+  <div class="gesture-chip">P</div>
+  <div class="gesture-chip">Q</div>
+  <div class="gesture-chip">R</div>
+  <div class="gesture-chip">S</div>
+  <div class="gesture-chip">T</div>
+  <div class="gesture-chip">U</div>
+  <div class="gesture-chip">V</div>
+  <div class="gesture-chip">W</div>
+  <div class="gesture-chip">X</div>
+  <div class="gesture-chip">Y</div>
+  <div class="gesture-chip">Z</div>
+  <!-- Numbers 0–9 -->
+  <div class="gesture-chip">0</div>
+  <div class="gesture-chip">1</div>
+  <div class="gesture-chip">2</div>
+  <div class="gesture-chip">3</div>
+  <div class="gesture-chip">4</div>
+  <div class="gesture-chip">5</div>
+  <div class="gesture-chip">6</div>
+  <div class="gesture-chip">7</div>
+  <div class="gesture-chip">8</div>
+  <div class="gesture-chip">9</div>
+  <!-- Dynamic word gestures -->
+  <div class="gesture-chip gesture-chip--word">CONGRATULATIONS</div>
+</div>
+        <div class="gesture-legend">
+          <span class="legend-dot legend-dot--static"></span><span>Static</span>
+          <span class="legend-dot legend-dot--dynamic"></span><span>Dynamic</span>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ── Footer ───────────────────────── -->
+  <footer class="footer">
+    <span>UNMUTE.AI © 2025</span>
+    <span class="footer__sep">·</span>
+    <span>MediaPipe · RandomForest · FastAPI</span>
+    <span class="footer__sep">·</span>
+    <span id="latencyVal">-- ms</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

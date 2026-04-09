@@ -1,0 +1,23 @@
+
+# ─────────────────────────────────────────
+#  UNMUTE.AI — Requirements (Windows fixed)
+#  Install: pip install -r requirements.txt
+# ─────────────────────────────────────────
+
+# Backend server
+fastapi==0.104.1
+uvicorn==0.24.0
+websockets==12.0
+
+# Computer vision & ML
+opencv-python==4.8.1.78
+mediapipe==0.10.9
+scikit-learn==1.3.2
+numpy==1.24.4
+
+# Data handling
+pandas==2.1.4
+
+# Utilities
+matplotlib==3.7.3
+python-multipart==0.0.6

@@ -11,7 +11,7 @@ websockets==12.0
 
 # Computer vision & ML
 opencv-python==4.8.1.78
-mediapipe==0.10.9
+mediapipe==0.10.13
 scikit-learn==1.3.2
 numpy==1.24.4
 

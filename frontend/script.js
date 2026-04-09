@@ -3,7 +3,7 @@
 //  Word Builder + Text-to-Speech
 // ─────────────────────────────────────────
 
-const WS_URL         = "ws://127.0.0.1:8000/ws";
+const WS_URL         = "ws://unmute-ai-production.up.railway.app/ws";
 const SEND_INTERVAL  = 100;    // ms — 10 fps to backend
 const HOLD_DURATION  = 1500;   // ms — hold gesture this long to commit
 const RECONNECT_MS   = 3000;

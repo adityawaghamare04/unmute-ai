@@ -1,7 +1,8 @@
 import os
 
-BASE_DIR          = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH        = os.path.join(BASE_DIR, "model", "model.p")
+# config.py — replace the first two lines with:
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model", "model.p")
 
 MAX_HANDS         = 1
 MIN_DETECTION_CONF = 0.6

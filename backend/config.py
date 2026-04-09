@@ -17,4 +17,4 @@ FRAME_WIDTH        = 640
 FRAME_HEIGHT       = 480
 
 HOST               = "127.0.0.1"
-PORT               = int(os.environ.get("PORT", 8000))
+PORT               = 8000

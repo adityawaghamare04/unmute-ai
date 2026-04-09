@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNMUTE.AI — Real-Time Sign Language Recognition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="home.css"/>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       LOADER OVERLAY
+  ══════════════════════════════════════ -->
+  <div id="loader">
+
+    <div class="ld-bg"></div>
+    <canvas id="ldCanvas"></canvas>
+
+    <div class="ld-corner tl"></div>
+    <div class="ld-corner tr"></div>
+    <div class="ld-corner bl"></div>
+    <div class="ld-corner br"></div>
+
+    <!-- This entire block flies to the navbar logo position -->
+    <div class="ld-logo-wrap" id="ldLogoWrap">
+      <span class="ld-unmute" id="ldUnmute">UNMUTE</span>
+      <div class="ld-glow"></div>
+      <span class="ld-dot" id="ldDot">.</span>
+      <span class="ld-ai" id="ldAi">AI</span>
+    </div>
+
+    <!-- Short typing tagline -->
+    <div class="ld-tagline-wrap">
+      <span class="ld-tagline" id="ldTagline"></span>
+      <span class="ld-caret"></span>
+    </div>
+
+    <!-- desc-wrap unused (typing moved to tagline) -->
+    <div class="ld-desc-wrap" id="ldDescWrap" style="display:none">
+      <p class="ld-desc"><span id="ldDesc"></span><span class="ld-desc-caret" id="ldDescCaret" style="display:none"></span></p>
+    </div>
+
+    <div class="ld-progress">
+      <div class="ld-progress-fill"></div>
+    </div>
+
+  </div>
+  <!-- ══════════════════════════════════════ -->
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ── HEADER ────────────────────────────── -->
+  <header id="header">
+    <a href="#" class="nav__logo">
+      <div class="logo__mark">U</div>
+      <span class="logo__text">UNMUTE<span>.AI</span></span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#gestures">Gestures</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="index.html" class="nav__cta">Launch App →</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ── HERO ──────────────────────────────── -->
+  <section id="hero">
+    <!-- Blobs -->
+    <div class="blob hero__blob1"></div>
+    <div class="blob hero__blob2"></div>
+    <div class="blob hero__blob3"></div>
+
+    <!-- Floating cards -->
+    <div class="hero__floats">
+      <div class="float-card fc1">
+        <span class="float-card__emoji">✋</span>
+        <div><div>Letter A</div><div class="float-card__label">ASL Static</div></div>
+      </div>
+      <div class="float-card fc2">
+        <span class="float-card__emoji">🤟</span>
+        <div><div>HELLO</div><div class="float-card__label">Dynamic Gesture</div></div>
+      </div>
+      <div class="float-card fc3">
+        <span class="float-card__emoji">👌</span>
+        <div><div>98.2%</div><div class="float-card__label">Confidence</div></div>
+      </div>
+      <div class="float-card fc4">
+        <span class="float-card__emoji">⚡</span>
+        <div><div>24 FPS</div><div class="float-card__label">Real-time</div></div>
+      </div>
+      <div class="float-card fc5">
+        <span class="float-card__emoji">🔊</span>
+        <div><div>TTS Active</div><div class="float-card__label">Speaking now</div></div>
+      </div>
+    </div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow">
+        <span class="hero__eyebrow-dot"></span>
+        Real-time Sign Language Recognition
+      </div>
+      <h1 class="hero__title">
+        Giving hands<br/>a <em>voice</em>
+      </h1>
+      <p class="hero__sub">
+        UNMUTE.AI translates hand gestures into words instantly — using your webcam, MediaPipe, and machine learning. No special hardware required.
+      </p>
+      <div class="hero__actions">
+        <a href="index.html" class="btn-primary">
+          <span>Start Conversation</span>
+          <span class="btn__icon">→</span>
+        </a>
+        <a href="#how" class="btn-secondary">
+          ✦ See how it works
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-hint__arrow">↓</div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────── -->
+  <section id="how">
+    <div class="blob how__blob"></div>
+    <div class="how__inner">
+      <div>
+        <span class="section__eyebrow">How it works</span>
+        <h2 class="section__title">From gesture to<br/>words in milliseconds</h2>
+        <p class="section__sub">A 6-layer pipeline processes your hand movements in real time — from raw webcam pixels to spoken words.</p>
+
+        <div class="steps" style="margin-top: 36px;">
+          <div class="step">
+            <div class="step__num step__num--lavender">01</div>
+            <div class="step__text">
+              <h4>Webcam Capture</h4>
+              <p>Your browser captures frames via the MediaDevices API and encodes them as JPEG — 10 frames per second sent to the backend.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step__num step__num--blush">02</div>
+            <div class="step__text">
+              <h4>Landmark Extraction</h4>
+              <p>MediaPipe Hands detects 21 3D keypoints on your hand. We apply min-max normalization to produce 63 translation-invariant features.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step__num step__num--sage">03</div>
+            <div class="step__text">
+              <h4>Dual Prediction</h4>
+              <p>Two RandomForest models run simultaneously — one for static gestures (63 features), one for dynamic words (1890 features over 30 frames).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step__num step__num--peach">04</div>
+            <div class="step__text">
+              <h4>Word Builder + TTS</h4>
+              <p>Hold a gesture for 1.5 seconds to commit it to the sentence builder. The Web Speech API speaks each word aloud immediately.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="how__visual">
+        <div class="phone-mockup">
+          <div class="mockup__gesture">✋</div>
+          <div class="mockup__label">Letter A</div>
+          <div class="mockup__conf">Confidence <span>97.4%</span></div>
+        </div>
+        <div class="orbit-chip orbit-chip--1">⚡ 24 FPS</div>
+        <div class="orbit-chip orbit-chip--2">🧠 RandomForest</div>
+        <div class="orbit-chip orbit-chip--3">🔊 Speaking...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ───────────────────────────── -->
+  <section id="features">
+    <div class="features__inner">
+      <div class="features__head">
+        <span class="section__eyebrow">Features</span>
+        <h2 class="section__title">Everything you need</h2>
+        <p class="section__sub">Built for accessibility, speed, and extensibility. Add new gestures in minutes.</p>
+      </div>
+
+      <div class="features__grid">
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--lavender">⚡</div>
+          <h3>Real-Time Inference</h3>
+          <p>Predictions delivered at 24+ FPS via persistent WebSocket connection — no page reloads, no polling delays.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--blush">🧠</div>
+          <h3>Dual ML Models</h3>
+          <p>Static gestures use a 63-feature model. Dynamic word gestures use a 1890-feature sequence model. Best confidence wins.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--sage">🔊</div>
+          <h3>Text-to-Speech</h3>
+          <p>Web Speech API speaks every committed gesture aloud. Adjustable speed and pitch. Works offline.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--peach">✍️</div>
+          <h3>Word Builder</h3>
+          <p>Hold any gesture 1.5 seconds to add it to a live sentence. Backspace, space, and clear controls included.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--sky">📦</div>
+          <h3>Extensible Pipeline</h3>
+          <p>Add any new gesture in 3 steps: drop videos in a folder, run the dataset script, retrain. No code changes needed.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-card__icon feat-card__icon--cream">🎯</div>
+          <h3>Confidence Gating</h3>
+          <p>Predictions below 75% confidence are flagged as low-confidence — preventing false positives from reaching the word builder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GESTURES ───────────────────────────── -->
+  <section id="gestures">
+    <div class="gestures__inner">
+      <span class="section__eyebrow" style="color: var(--sage-deep);">Supported Gestures</span>
+      <h2 class="section__title" style="color: var(--text);">What UNMUTE.AI knows</h2>
+      <p class="section__sub" style="margin: 0 auto; color: var(--text-mid);">Currently recognising 5 gesture classes — with more on the way.</p>
+
+      <div class="gestures__grid">
+        <div class="gesture-showcase-card">
+          <span class="gsc__emoji">✊</span>
+          <div class="gsc__label">A</div>
+          <span class="gsc__type gsc__type--static">Static</span>
+        </div>
+        <div class="gesture-showcase-card">
+          <span class="gsc__emoji">🖐️</span>
+          <div class="gsc__label">B</div>
+          <span class="gsc__type gsc__type--static">Static</span>
+        </div>
+        <div class="gesture-showcase-card">
+          <span class="gsc__emoji">👆</span>
+          <div class="gsc__label">L</div>
+          <span class="gsc__type gsc__type--static">Static</span>
+        </div>
+        <div class="gesture-showcase-card">
+          <span class="gsc__emoji">☝️</span>
+          <div class="gsc__label">1</div>
+          <span class="gsc__type gsc__type--static">Static</span>
+        </div>
+        <div class="gesture-showcase-card">
+          <span class="gsc__emoji">👏</span>
+          <div class="gsc__label">CONGRATULATIONS</div>
+          <span class="gsc__type gsc__type--dynamic">Dynamic</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ──────────────────────────────── -->
+  <section id="about">
+    <div class="blob about__blob"></div>
+    <div class="about__inner">
+      <div class="about__text">
+        <span class="section__eyebrow">About</span>
+        <h2 class="section__title">Built to break barriers</h2>
+        <p class="section__sub">UNMUTE.AI is a final year project built to make communication more accessible — bridging sign language and spoken word using open-source ML tools.</p>
+
+        <div class="about__stats">
+          <div class="stat-pill">
+            <div class="stat-pill__val">63</div>
+            <div class="stat-pill__label">Features per static frame</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__val">1890</div>
+            <div class="stat-pill__label">Features per word gesture</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__val">500</div>
+            <div class="stat-pill__label">Trees per RandomForest</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__val">30</div>
+            <div class="stat-pill__label">Frames per sequence</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about__visual">
+        <div class="about-card">
+          <span class="about-card__icon">🤖</span>
+          <h4>MediaPipe</h4>
+          <p>Google's on-device hand tracking — 21 landmarks at 60 FPS</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card__icon">🌲</span>
+          <h4>RandomForest</h4>
+          <p>500-tree ensemble classifier — fast, accurate, no GPU needed</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card__icon">⚡</span>
+          <h4>FastAPI</h4>
+          <p>Async WebSocket server — handles real-time frame streaming</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card__icon">🎙️</span>
+          <h4>Web Speech API</h4>
+          <p>Browser-native TTS — speaks gestures with zero latency</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TECH STACK ─────────────────────────── -->
+  <section id="tech">
+    <div class="tech__inner">
+      <span class="section__eyebrow">Technology</span>
+      <h2 class="section__title">Built with</h2>
+      <p class="section__sub" style="margin: 0 auto;">Open-source, no-GPU, runs entirely on your laptop.</p>
+
+      <div class="tech__pills">
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#4a9b6f;"></span>MediaPipe 0.10.9</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#9b7ecb;"></span>FastAPI 0.104</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#f4a7ba;"></span>scikit-learn 1.3.2</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#8acde8;"></span>OpenCV 4.8</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#f5b89a;"></span>NumPy 1.24.4</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#8bc4a0;"></span>Pandas 2.1.4</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#9b7ecb;"></span>Uvicorn 0.24</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#f4a7ba;"></span>WebSockets 12.0</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#8acde8;"></span>Python 3.10</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#f5b89a;"></span>Web Speech API</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#4a9b6f;"></span>HTML5 Canvas</div>
+        <div class="tech-pill"><span class="tech-pill__dot" style="background:#9b7ecb;"></span>Vanilla JS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ────────────────────────────────── -->
+  <section id="cta">
+    <div class="blob cta__blob1"></div>
+    <div class="blob cta__blob2"></div>
+    <div class="cta__inner">
+      <h2 class="cta__title">Ready to<br/>speak with your hands?</h2>
+      <p class="cta__sub">Open the app, allow camera access, and start signing. No account, no install, no waiting.</p>
+      <a href="index.html" class="btn-cta">
+        <span>✦</span>
+        Start Conversation
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────── -->
+  <footer>
+    <div class="footer__inner">
+      <div class="footer__logo">UNMUTE<span>.AI</span></div>
+      <div class="footer__links">
+        <a href="#hero">Home</a>
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="index.html">Launch App</a>
+      </div>
+      <div class="footer__copy">
+        Built with MediaPipe · FastAPI · RandomForest · WebSocket · Web Speech API &nbsp;·&nbsp; UNMUTE.AI © 2025
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ══════════════════════════════════════════
+    //  LOADER — cinematic blend to navbar
+    // ══════════════════════════════════════════
+
+    (function() {
+
+      // ── Timing constants (ms) ─────────────
+      const TYPE_START   = 1720;   // short tagline typing begins
+      const CHAR_DELAY   = 50;     // ms per character
+      // Short line: ~20 chars × 50ms = ~1000ms → finishes ~2720ms
+      // Long line:  ~153 chars × 40ms = ~6120ms → finishes ~9220ms
+      const BLEND_START  = 9600;   // bg fades dark→cream after desc finishes
+      const FLY_START    = 10100;  // logo flies to navbar
+      const DONE_DELAY   = 11200;  // loader removed
+
+      const LONG_LINE    = "UNMUTE.AI is built to make communication more accessible — bridging sign language and spoken word.";
+
+      // ── Typing animation ─────────────────
+      let charIdx = 0;
+      const tagEl = document.getElementById('ldTagline');
+
+      function typeChar() {
+        if (charIdx < LONG_LINE.length) {
+          tagEl.textContent += LONG_LINE[charIdx++];
+          setTimeout(typeChar, CHAR_DELAY - 10);
+        }
+      }
+      setTimeout(typeChar, TYPE_START);
+
+      // ── Particle system ──────────────────
+      const canvas = document.getElementById('ldCanvas');
+      const ctx    = canvas.getContext('2d');
+
+      function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const COLS = [
+        'rgba(201,184,234,','rgba(244,167,186,',
+        'rgba(139,196,160,','rgba(138,205,232,','rgba(245,184,154,',
+      ];
+
+      const pts = Array.from({ length: 60 }, () => ({
+        x: Math.random() * innerWidth,  y: Math.random() * innerHeight,
+        r: Math.random() * 2.0 + 0.4,
+        c: COLS[Math.floor(Math.random() * COLS.length)],
+        a: Math.random() * 0.4 + 0.08,
+        vx: (Math.random() - 0.5) * 0.32, vy: (Math.random() - 0.5) * 0.32,
+        ph: Math.random() * Math.PI * 2, sp: Math.random() * 0.016 + 0.007,
+      }));
+
+      let met = false, dying = false;
+      setTimeout(() => { met = true; }, 1260);
+
+      function tick() {
+        if (dying) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2, cy = canvas.height / 2;
+
+        pts.forEach(p => {
+          p.ph += p.sp;
+          const am = Math.sin(p.ph) * 0.10;
+          if (met) {
+            const dx = cx - p.x, dy = cy - p.y, d = Math.sqrt(dx*dx+dy*dy)||1;
+            p.vx += (dx/d)*0.010; p.vy += (dy/d)*0.010;
+            p.vx *= 0.974; p.vy *= 0.974;
+          }
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = canvas.width;  if (p.x > canvas.width)  p.x = 0;
+          if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fillStyle = p.c + Math.min(1,Math.max(0,p.a+am)) + ')'; ctx.fill();
+        });
+
+        for (let i = 0; i < pts.length; i++) for (let j = i+1; j < pts.length; j++) {
+          const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+          if (d < 88) {
+            ctx.beginPath(); ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y);
+            ctx.strokeStyle=`rgba(201,184,234,${(1-d/88)*0.048})`; ctx.lineWidth=0.65; ctx.stroke();
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+      tick();
+
+      // ── FLIP: fly logo from center → navbar ──
+      //
+      //  How it works:
+      //  1. Measure where .ld-logo-wrap currently sits (getBoundingClientRect)
+      //  2. Measure where .nav__logo currently sits
+      //  3. Compute the scale factor (navbar font-size / loader font-size)
+      //  4. Set .ld-logo-wrap to position:fixed at its current spot (snapshot)
+      //  5. One rAF later, apply target top/left + scale — CSS transition does the rest
+
+      const loader     = document.getElementById('loader');
+      const logoWrap   = document.getElementById('ldLogoWrap');
+
+      // ── Phase 1: blend bg dark → cream ───
+      setTimeout(() => {
+        // Shift text colors to match real navbar logo colors
+        logoWrap.classList.add('color-shift');
+        // Fade out bg / particles / corners / description
+        loader.classList.add('loader--blending');
+      }, BLEND_START);
+
+      // ── Phase 2: fly logo to navbar ──────
+      setTimeout(() => {
+        dying = true; // stop particle loop
+
+        // ── Snapshot current position ──────
+        const fromRect  = logoWrap.getBoundingClientRect();
+
+        // ── Target: real navbar logo ────────
+        const navLogo   = document.querySelector('.nav__logo');
+        const toRect    = navLogo.getBoundingClientRect();
+
+        // Scale: loader text is ~96px, navbar logo text is ~20px
+        // We scale the whole wrap so final rendered size matches
+        const fromH     = fromRect.height;
+        const toH       = toRect.height;      // height of .nav__logo element
+        const scaleFactor = toH / fromH;
+
+        // Anchor point: we want top-left corners to meet
+        // target center-x = toRect.left + toRect.width/2
+        // target center-y = toRect.top  + toRect.height/2
+        const toCX = toRect.left + toRect.width  / 2;
+        const toCY = toRect.top  + toRect.height / 2;
+
+        // While still in flow, grab its center
+        const fromCX = fromRect.left + fromRect.width  / 2;
+        const fromCY = fromRect.top  + fromRect.height / 2;
+
+        // 1. Pin element at exact current spot using fixed positioning
+        logoWrap.style.position   = 'fixed';
+        logoWrap.style.left       = fromCX + 'px';
+        logoWrap.style.top        = fromCY + 'px';
+        logoWrap.style.transform  = 'translate(-50%, -50%) scale(1)';
+        logoWrap.style.margin     = '0';
+        logoWrap.style.zIndex     = '100001';
+
+        // Force layout so browser registers starting position
+        logoWrap.getBoundingClientRect();
+
+        // 2. Enable transition, then move to target in next frame
+        logoWrap.classList.add('is-flying');
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            logoWrap.style.left      = toCX + 'px';
+            logoWrap.style.top       = toCY + 'px';
+            logoWrap.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
+          });
+        });
+
+      }, FLY_START);
+
+      // ── Phase 3: clean up ─────────────────
+      setTimeout(() => {
+        loader.classList.add('loader--gone');
+        document.body.classList.add('loaded');
+      }, DONE_DELAY);
+
+    })();
+
+    // ── Custom cursor ───────────────────────
+    const cursor     = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top  = mouseY + 'px';
+    });
+
+    // Smooth ring follow
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top  = ringY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover effect
+    document.querySelectorAll('a, button, .feat-card, .gesture-showcase-card, .about-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('cursor--hover');
+        cursorRing.classList.add('cursor-ring--hover');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('cursor--hover');
+        cursorRing.classList.remove('cursor-ring--hover');
+      });
+    });
+
+    // ── Scroll header shadow ────────────────
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // ── Intersection Observer (scroll reveal) ─
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    // Observe all animatable elements
+    document.querySelectorAll(
+      '.step, .feat-card, .gesture-showcase-card, .stat-pill, .about-card, .tech-pill'
+    ).forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 6) * 0.08}s`;
+      observer.observe(el);
+    });
+
+    // ── Animated gesture cycle in mockup ────
+    const gestures = ['✋', '🤟', '👆', '☝️', '👏'];
+    const labels   = ['Letter A', 'Letter B', 'Letter L', 'Number 1', 'CONGRATULATIONS'];
+    const confs    = ['97.4%', '94.1%', '98.8%', '96.2%', '91.5%'];
+    let gi = 0;
+
+    const mockupEmoji = document.querySelector('.mockup__gesture');
+    const mockupLabel = document.querySelector('.mockup__label');
+    const mockupConf  = document.querySelector('.mockup__conf span');
+
+    setInterval(() => {
+      gi = (gi + 1) % gestures.length;
+      mockupEmoji.style.opacity = '0';
+      mockupEmoji.style.transform = 'scale(0.7)';
+      setTimeout(() => {
+        mockupEmoji.textContent   = gestures[gi];
+        mockupLabel.textContent   = labels[gi];
+        mockupConf.textContent    = confs[gi];
+        mockupEmoji.style.opacity = '1';
+        mockupEmoji.style.transform = 'scale(1)';
+      }, 300);
+    }, 2200);
+
+    // Smooth transition for mockup
+    mockupEmoji.style.transition = 'opacity 0.3s, transform 0.3s';
+  </script>
+</body>
+</html>
